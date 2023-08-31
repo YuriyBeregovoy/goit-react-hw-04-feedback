@@ -19,16 +19,13 @@ export const App = () => {
   const handleClickBad = () => setBad((prevState) => prevState + 1);
 
   const handleClickNeutral = () => setNeutral((prevState) => prevState + 1);
-  
+
 
  useEffect(() => {
-    const newTotal = neutral + bad + good;
-    setTotal(newTotal);
-    if (newTotal > 0) {
-      setPositiveQuantity(Math.round((good * 100) / newTotal));
-    } else {
-      setPositiveQuantity(0);
-    }
+    const Total = neutral + bad + good;
+    setTotal(Total);
+    setPositiveQuantity(Math.round((good * 100) / Total));
+   
   }, [good, bad, neutral]);
 
 
