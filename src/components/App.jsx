@@ -1,69 +1,51 @@
+import { useState, useEffect } from "react";
 import { GlobalStyle } from "./GlobalStyle";
 import { SectionTitles } from "./SectionTitles/SectionTitles";
 
-const { Component } = require("react")
 
 
-export class App extends Component {
+export const App = () => {
 
-state = {
-  good: 0,
-  neutral: 0,
-  bad: 0,
-  total: 0,
-  positiveQuantity: 0
-  }
+
+  const [good, setGood] = useState(0);
+  const [bad, setBad] = useState(0);
+  const [neutral, setNeutral] = useState(0); 
+  const [total, setTotal] = useState(0);
+  const [positiveQuantity, setPositiveQuantity] = useState(0);
+
+
+  const handleClickGood = () => setGood((prevState) => prevState + 1);
   
-  handleClickGood = () => {
-    this.setState(
-      (prevState) => {
-        return { good: prevState.good + 1, };
-      },    () => this.countTotalFeedback(),
-     );
-  };
+  const handleClickBad = () => setBad((prevState) => prevState + 1);
 
-  handleClickBad = () => {
-    this.setState(
-      (prevState) => {
-        return { bad: prevState.bad + 1, };
-      }, () => this.countTotalFeedback(),
-      )
-  };
+  const handleClickNeutral = () => setNeutral((prevState) => prevState + 1);
+  
 
- handleClickNeutral = () => {
-    this.setState(
-      (prevState) => {
-        return {neutral: prevState.neutral + 1, };
-      }, () => this.countTotalFeedback(),
-      
-    );
-  };
+ useEffect(() => {
+    const newTotal = neutral + bad + good;
+    setTotal(newTotal);
+    if (newTotal > 0) {
+      setPositiveQuantity(Math.round((good * 100) / newTotal));
+    } else {
+      setPositiveQuantity(0);
+    }
+  }, [good, bad, neutral]);
 
 
-  countTotalFeedback = () => {
-    this.setState(
-      ({ neutral, bad, good }) => {
-        return { total: neutral + bad + good, };
-      },
-    () => this.countPositiveFeedbackPercentage());
-  };
-
-  countPositiveFeedbackPercentage = () => {
-   this.setState(
-      ({good, total}) => {
-        const positivePercentage = Math.round((good * 100) / total);
-      return { positiveQuantity: positivePercentage };
-      },);
-  };
-
-
-
-  render() {
-    return (
-      <div>
-        <SectionTitles onLeaveFeedbackGood={this.handleClickGood} onLeaveFeedbackBad={this.handleClickBad} onLeaveFeedbackNeutral={this.handleClickNeutral} good={this.state.good} neutral={this.state.neutral} bad={this.state.bad} total={this.state.total} positivePercentage={this.state.positiveQuantity} />
-        <GlobalStyle/>
-      </div>
+  
+  return (
+    <div>
+      <SectionTitles
+        onLeaveFeedbackGood={handleClickGood}
+        onLeaveFeedbackBad={handleClickBad}
+        onLeaveFeedbackNeutral={handleClickNeutral}
+        good={good}
+        neutral={neutral}
+        bad={bad}
+        total={total}
+        positivePercentage={positiveQuantity} />
+      <GlobalStyle />
+    </div>
   );
- }
 };
+
